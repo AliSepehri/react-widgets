@@ -16,6 +16,7 @@ let propTypes = {
 
   culture:          React.PropTypes.string,
   value:            React.PropTypes.instanceOf(Date),
+  days:             React.PropTypes.array,
   focused:          React.PropTypes.instanceOf(Date),
   min:              React.PropTypes.instanceOf(Date),
   max:              React.PropTypes.instanceOf(Date),
@@ -29,7 +30,17 @@ let propTypes = {
   onChange:         React.PropTypes.func.isRequired
 };
 
-let isEqual = (dateA, dateB) => dates.eq(dateA, dateB, 'day')
+let isEqual = (dateA, days) => {
+  if(days instanceof Array) {
+    return days.some((day) => {
+      if(dates.eq(dateA, day, 'day')){
+        return true;
+      }
+    });
+  }else{
+    return dates.eq(dateA, days, 'day');
+  }
+}
 
 let MonthView = React.createClass({
 
@@ -75,7 +86,7 @@ let MonthView = React.createClass({
   _row(row, rowIdx){
     let {
         focused, today, disabled, onChange
-      , value, culture, min, max
+      , value,days , culture, min, max
       , dayComponent: Day } = this.props
       , id = instanceId(this)
       , labelFormat = dateLocalizer.getFormat('footer');
@@ -85,7 +96,7 @@ let MonthView = React.createClass({
         { row.map((day, colIdx) => {
 
           var isFocused  = isEqual(day, focused)
-            , isSelected = isEqual(day, value)
+            , isSelected = isEqual(day, days)
             , isToday = isEqual(day, today)
             , date = dateLocalizer.format(day, dateFormat(this.props), culture)
             , label = dateLocalizer.format(day, labelFormat, culture);

@@ -170,7 +170,7 @@ let Calendar = React.createClass({
   render() {
 
     let {
-        className, value, footerFormat
+        className, value,days , footerFormat
       , disabled, readOnly, finalView, footer
       , messages, min, max, culture, duration, currentDate } = this.props
 
@@ -232,6 +232,7 @@ let Calendar = React.createClass({
             aria-labelledby={labelID}
             today={todaysDate}
             value={value}
+            days={days}
             focused={currentDate}
             onChange={this.change}
             onKeyDown={this._keyDown}
